@@ -15,7 +15,7 @@ export const CardHeader = ({title, description, className}: {
               </h3>
               </div>
 
-              <p className="text-sm lg:text-base text-white-60 max-w-xs mt-2">
+              <p className="text-sm lg:text-base text-white/60 max-w-xs mt-2">
                 {description}
               </p>
             </div>
