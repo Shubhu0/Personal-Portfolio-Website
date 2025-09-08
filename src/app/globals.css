@@ -3,18 +3,307 @@
 @tailwind utilities;
 
 @layer base {
-    .nav-item {
-        @apply px-4 py-1.5 rounded-full text-white/70 text-sm font-semibold hover:bg-white/10 hover:text-white transition duration-300;
+  body {
+    margin: 0;
+    padding: 0;
+  }
+  
+  .seamless-bg-with-grain {
+    position: relative;
+    background: linear-gradient(135deg, 
+      #44624a 0%, 
+      #2c3e32 25%, 
+      #44624a 50%, 
+      #8ba888 75%, 
+      #44624a 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+  }
+  
+  .seamless-bg-with-grain::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('/src/assets/images/grain.jpg');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Ensure content appears above grain */
+  .seamless-bg-with-grain > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  @keyframes gradientShift {
+    0% {
+      background-position: 0% 50%;
     }
-
-    
-    .hero-ring{
-        @apply absolute inset-0  border-2 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-[#f1ebe1]/5 shadow-[0_0_80px_inset] shadow-[#f1ebe1]/5;
+    50% {
+      background-position: 100% 50%;
     }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
 }
 
-@layer utlities {
-    .container {
-        @apply lg:max-w-5xl;
-    }
+.hero-ring {
+  @apply border-2 border-emerald-300/20 rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
+  box-shadow: 0 0 80px inset rgba(16, 185, 129, 0.1);
+}
+
+/* Update the existing .nav-item styles */
+
+.nav-item {
+  @apply px-4 py-2 rounded-full text-sm font-medium cursor-pointer;
+  background: rgba(189, 162, 141, 0.1);
+  border: 1px solid rgba(249, 232, 206, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.02;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover::before {
+  opacity: 0.04;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(68, 98, 74, 0.3);
+}
+
+.nav-item:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Active section indicator */
+.nav-item[style*="background: linear-gradient(135deg, #f9e8ce"] {
+  box-shadow: 0 4px 15px rgba(68, 98, 74, 0.4);
+}
+
+.nav-item[style*="background: linear-gradient(135deg, #f9e8ce"]:hover {
+  box-shadow: 0 8px 25px rgba(68, 98, 74, 0.5);
+}
+
+/* Button interaction styles */
+button {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+button:hover {
+  @apply transform -translate-y-1;
+  box-shadow: 0 10px 25px rgba(68, 98, 74, 0.3);
+}
+
+button:active {
+  @apply scale-95;
+}
+
+/* Card styles with seamless integration and grain texture */
+.portfolio-card {
+  position: relative;
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.1) 0%, 
+    rgba(249, 232, 206, 0.05) 50%, 
+    rgba(139, 168, 136, 0.1) 100%
+  );
+  border: 1px solid rgba(249, 232, 206, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.portfolio-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.portfolio-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.portfolio-card:hover {
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.15) 0%, 
+    rgba(249, 232, 206, 0.1) 50%, 
+    rgba(139, 168, 136, 0.15) 100%
+  );
+  border-color: rgba(249, 232, 206, 0.4);
+  transform: translateY(-5px);
+}
+
+.portfolio-card:hover::before {
+  opacity: 0.05;
+}
+
+/* Remove tilt specifically for About section cards */
+#about .portfolio-card:hover {
+  transform: translateY(-5px) rotate(0deg);
+}
+
+@keyframes move-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ping-large {
+  75%, 100% {
+    transform: scale(3);
+    opacity: 0;
+  }
+}
+
+/* Seamless section transitions with subtle grain */
+.section-transition {
+  position: relative;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(68, 98, 74, 0.1) 50%,
+    transparent 100%
+  );
+}
+
+.section-transition::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 180px 180px;
+  opacity: 0.04;
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+
+/* Add these new styles to your existing CSS */
+
+/* Enhanced text cycling animation */
+.text-cycle-word {
+  display: inline-block;
+  animation: textCycle 0.6s ease-in-out;
+}
+
+@keyframes textCycle {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-5px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Gradient text animation */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-text-animated {
+  background: linear-gradient(-45deg, #10b981, #bda28d, #f9e8ce, #8ba888);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Enhanced button hover effects */
+.grain-button:hover {
+  box-shadow: 0 15px 35px rgba(68, 98, 74, 0.4);
+  transform: translateY(-3px) scale(1.05);
+}
+
+.grain-button:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+/* Responsive text sizing */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+    line-height: 1.1;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+}
+
+/* Add these styles to your existing CSS */
+
+/* Typewriter cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: blink 1s infinite;
+  color: #10b981;
+}
+
+/* Ensure consistent height for typewriter */
+.typewriter-container {
+  min-height: 1.2em;
+  display: inline-block;
 }

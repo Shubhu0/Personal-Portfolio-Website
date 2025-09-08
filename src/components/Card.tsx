@@ -1,4 +1,3 @@
-import grainImage from "@/assets/images/grain.jpg";
 import { ComponentPropsWithoutRef } from "react";
 import { twMerge } from "tailwind-merge";
 
@@ -6,20 +5,28 @@ export const Card = ({
     className,
     children,
     ...other
-}: ComponentPropsWithoutRef <"div">) => {
+}: ComponentPropsWithoutRef<"div">) => {
     return (
         <div 
             className={twMerge(
-                "bg-[#8ba888] rounded-3xl relative z-0 overflow-hidden after:z-10 after:content-[''] after:absolute after:inset-0 after:outline-2 after:outline after:-outline-offset-2 after:rounded-3xl after:outline-white/20 after:pointer-events-none",
-                className)}
-                {...other}
+                "portfolio-card rounded-3xl relative z-0 overflow-hidden p-6 transition-all duration-300",
+                className
+            )}
+            {...other}
         >
-
-              <div className="absolute inset-0 -z-10 opacity-5" 
-              style={{
-                backgroundImage: `url(${grainImage.src})`
-              }}></div>
-              {children}
+            <div 
+                className="absolute inset-0 opacity-5 pointer-events-none"
+                style={{
+                    background: `linear-gradient(45deg, 
+                        rgba(68, 98, 74, 0.1) 0%, 
+                        rgba(189, 162, 141, 0.1) 50%, 
+                        rgba(139, 168, 136, 0.1) 100%
+                    )`
+                }}
+            />
+            <div className="relative z-10">
+                {children}
+            </div>
         </div>
     );
 };
