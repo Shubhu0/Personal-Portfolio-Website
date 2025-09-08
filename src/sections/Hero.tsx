@@ -6,7 +6,7 @@ import ArrowDown from "@/assets/icons/arrow-down.svg";
 import StarIcon from "@/assets/icons/star.svg";
 import { HeroOrbit } from "@/components/HeroOrbit";
 import SparkleIcon from "@/assets/icons/sparkle.svg";
-import { TextCycle } from "@/components/TextCycle";
+import { TypeWriter } from "@/components/TypeWriter";
 
 export const HeroSection = () => {
   const scrollToSection = (sectionId: string) => {
@@ -31,10 +31,12 @@ export const HeroSection = () => {
     "Gamer"
   ];
 
+  console.log('Hero changingWords:', changingWords); // Debug log
+
   return (
     <div className='py-32 md:py-48 lg:py-60 relative z-0 overflow-x-clip hero-section-with-grain'>
+      {/* Your existing orbital elements */}
       <div className='absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_70%,transparent)]'>
-        {/* Enhanced grain overlay for hero section */}
         <div 
           className='absolute inset-0 -z-10 opacity-15'
           style={{
@@ -50,7 +52,7 @@ export const HeroSection = () => {
         <div className='size-[1020px] hero-ring'></div>
         <div className='size-[1220px] hero-ring'></div>
         
-        {/* Your existing HeroOrbit components */}
+        {/* All your existing HeroOrbit components */}
         <HeroOrbit size={430} rotation={-14} shouldOrbit orbitDuration='30s' shouldSpin spinDuration='3s'>
           <SparkleIcon className='size-8 text-emerald-300/30' />
         </HeroOrbit>
@@ -99,7 +101,7 @@ export const HeroSection = () => {
             alt="Person peeking behind laptop" 
           />
           <div 
-            className='px-4 py-1.5 inline-flex items-center gap-4 rounded-lg mt-4 grain-card'
+            className='px-4 py-1.5 inline-flex items-center gap-4 rounded-lg mt-4'
             style={{
               background: 'linear-gradient(135deg, rgba(189, 162, 141, 0.2) 0%, rgba(249, 232, 206, 0.1) 100%)',
               border: '1px solid rgba(249, 232, 206, 0.3)',
@@ -112,29 +114,30 @@ export const HeroSection = () => {
             <div className='text-sm font-medium text-[#f9e8ce]'>
               Hi, I'm Shubhankar
             </div>
-
           </div>
         </div>
         
         <div className='max-w-4xl mx-auto'>
-          <h1 className='font-serif text-3xl md:text-5xl lg:text-6xl text-center mt-8 tracking-wide text-[#f9e8ce] drop-shadow-lg leading-tight'>
-            {" "}
-            <TextCycle 
+          <h1 className='font-serif text-3xl md:text-5xl lg:text-6xl text-center mt-8 tracking-wide drop-shadow-lg leading-tight'>
+            <span className="text-[#f9e8ce]">I'm a </span>
+            <TypeWriter 
               words={changingWords} 
               className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-[#bda28d] to-[#f9e8ce] font-bold"
-              interval={3000}
+              typeSpeed={120}
+              deleteSpeed={80}
+              delayBetween={2500}
             />
           </h1>
 
           <p className='mt-6 md:text-lg lg:text-xl text-center text-[#bda28d] drop-shadow-sm max-w-2xl mx-auto'>
-            I specialize in transforming designs into functional, high-performing web applications. 
-            Let&apos;s collaborate to bring your vision to life with cutting-edge technology and exceptional user experience.
+            I specialize in transforming designs into functional, high-performing web applications.
           </p>
         </div>
         
+        {/* Your existing buttons */}
         <div className='flex flex-col md:flex-row justify-center items-center mt-10 gap-4'>
           <button 
-            className='inline-flex items-center gap-2 px-8 h-14 rounded-xl font-semibold text-lg grain-button transform transition-all duration-300 hover:scale-105'
+            className='inline-flex items-center gap-2 px-8 h-14 rounded-xl font-semibold text-lg transform transition-all duration-300 hover:scale-105'
             style={{
               background: 'linear-gradient(135deg, rgba(189, 162, 141, 0.2) 0%, rgba(139, 168, 136, 0.2) 100%)',
               border: '2px solid rgba(249, 232, 206, 0.4)',
@@ -147,7 +150,7 @@ export const HeroSection = () => {
           </button>
           
           <button 
-            className='inline-flex items-center gap-2 h-14 px-8 rounded-xl font-semibold text-lg grain-button transform transition-all duration-300 hover:scale-105'
+            className='inline-flex items-center gap-2 h-14 px-8 rounded-xl font-semibold text-lg transform transition-all duration-300 hover:scale-105'
             style={{
               background: 'linear-gradient(135deg, #f9e8ce 0%, #bda28d 100%)',
               color: '#44624a',

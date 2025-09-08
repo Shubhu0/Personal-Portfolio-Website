@@ -288,3 +288,22 @@ button:active {
     line-height: 1.2;
   }
 }
+
+/* Add these styles to your existing CSS */
+
+/* Typewriter cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.typewriter-cursor {
+  animation: blink 1s infinite;
+  color: #10b981;
+}
+
+/* Ensure consistent height for typewriter */
+.typewriter-container {
+  min-height: 1.2em;
+  display: inline-block;
+}

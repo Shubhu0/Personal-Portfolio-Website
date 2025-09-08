@@ -17,37 +17,49 @@ export const TypeWriter = ({
   deleteSpeed = 50, 
   delayBetween = 2000 
 }: TypeWriterProps) => {
-  const [currentWordIndex, setCurrentWordIndex] = useState(0);
-  const [currentText, setCurrentText] = useState('');
+  const [displayedText, setDisplayedText] = useState('');
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
-    const currentWord = words[currentWordIndex];
+    console.log('TypeWriter state:', { 
+      displayedText, 
+      wordIndex, 
+      charIndex, 
+      isDeleting, 
+      currentWord: words[wordIndex],
+      words 
+    });
 
+    const currentWord = words[wordIndex] || '';
+    
     const timer = setTimeout(() => {
-      if (isDeleting) {
-        setCurrentText(currentWord.substring(0, currentText.length - 1));
-        
-        if (currentText === '') {
-          setIsDeleting(false);
-          setCurrentWordIndex((prevIndex) => (prevIndex + 1) % words.length);
-        }
-      } else {
-        setCurrentText(currentWord.substring(0, currentText.length + 1));
-        
-        if (currentText === currentWord) {
-          setTimeout(() => setIsDeleting(true), delayBetween);
-        }
+      if (!isDeleting && charIndex < currentWord.length) {
+        // Type next character
+        setDisplayedText(currentWord.slice(0, charIndex + 1));
+        setCharIndex(prev => prev + 1);
+      } else if (!isDeleting && charIndex === currentWord.length) {
+        // Start deleting after delay
+        setTimeout(() => setIsDeleting(true), delayBetween);
+      } else if (isDeleting && charIndex > 0) {
+        // Delete character
+        setCharIndex(prev => prev - 1);
+        setDisplayedText(currentWord.slice(0, charIndex - 1));
+      } else if (isDeleting && charIndex === 0) {
+        // Move to next word
+        setIsDeleting(false);
+        setWordIndex(prev => (prev + 1) % words.length);
       }
     }, isDeleting ? deleteSpeed : typeSpeed);
 
     return () => clearTimeout(timer);
-  }, [currentText, isDeleting, currentWordIndex, words, typeSpeed, deleteSpeed, delayBetween]);
+  }, [charIndex, isDeleting, wordIndex, words, typeSpeed, deleteSpeed, delayBetween, displayedText]);
 
   return (
     <span className={className}>
-      {currentText}
-      <span className="animate-pulse">|</span>
+      {displayedText}
+      <span className="animate-pulse text-emerald-300 ml-1">|</span>
     </span>
   );
 };
