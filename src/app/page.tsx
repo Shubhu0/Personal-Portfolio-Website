@@ -19,7 +19,6 @@ export default function Home() {
       <div className="section-transition">
         <section id="projects">
           <ProjectsSection />
-          <TapeSection />
           <TestimonialsSection />
         </section>
       </div>
