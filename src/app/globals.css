@@ -136,6 +136,10 @@ button:active {
   );
   border: 1px solid rgba(249, 232, 206, 0.2);
   backdrop-filter: blur(10px);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow;
 }
 
 .portfolio-card::before {
@@ -147,30 +151,90 @@ button:active {
   bottom: 0;
   background-image: url('/src/assets/images/grain.jpg');
   background-repeat: repeat;
-  background-size: 150px 150px;
-  opacity: 0.03;
+  background-size: 100px 100px;
+  opacity: 0.05;
   mix-blend-mode: overlay;
   pointer-events: none;
   border-radius: inherit;
+  z-index: 1;
 }
 
 .portfolio-card > * {
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
+/* Smooth card entrance animations */
+@keyframes cardSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(100px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced stacking visual effects */
 .portfolio-card:hover {
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.15) 0%, 
-    rgba(249, 232, 206, 0.1) 50%, 
-    rgba(139, 168, 136, 0.15) 100%
-  );
-  border-color: rgba(249, 232, 206, 0.4);
-  transform: translateY(-5px);
+  transform: translateY(-10px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(68, 98, 74, 0.3) !important;
 }
 
-.portfolio-card:hover::before {
-  opacity: 0.05;
+/* Perspective container for 3D effects */
+.portfolio-section-container {
+  perspective: 1000px;
+  perspective-origin: center top;
+}
+
+/* Smooth scrolling for the entire section */
+#projects {
+  scroll-behavior: smooth;
+}
+
+/* Card depth shadows for stacking effect */
+.portfolio-card[style*="translateY(0px)"] {
+  box-shadow: 0 10px 40px rgba(68, 98, 74, 0.15);
+}
+
+.portfolio-card[style*="translateY(20px)"] {
+  box-shadow: 0 20px 50px rgba(68, 98, 74, 0.2);
+}
+
+.portfolio-card[style*="translateY(40px)"] {
+  box-shadow: 0 30px 60px rgba(68, 98, 74, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portfolio-card {
+    margin-bottom: 2rem;
+  }
+  
+  .portfolio-card:hover {
+    transform: translateY(-5px) scale(1.01);
+  }
+}
+
+@media (max-width: 640px) {
+  /* Reduce 3D effects on mobile for better performance */
+  .portfolio-card {
+    transform-style: flat;
+  }
+  
+  .portfolio-card[style*="rotateX"] {
+    transform: translateY(0px) scale(1) !important;
+  }
+}
+
+/* Loading state for smooth entrance */
+.portfolio-card[style*="opacity: 0"] {
+  pointer-events: none;
+}
+
+.portfolio-card[style*="opacity: 1"] {
+  pointer-events: auto;
 }
 
 /* Remove tilt specifically for About section cards */
@@ -306,4 +370,461 @@ button:active {
 .typewriter-container {
   min-height: 1.2em;
   display: inline-block;
+}
+
+/* Education card styles */
+.education-card {
+  position: relative;
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.1) 0%, 
+    rgba(249, 232, 206, 0.05) 50%, 
+    rgba(139, 168, 136, 0.1) 100%
+  );
+  border: 1px solid rgba(249, 232, 206, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.education-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.education-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.education-card:hover {
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.15) 0%, 
+    rgba(249, 232, 206, 0.1) 50%, 
+    rgba(139, 168, 136, 0.15) 100%
+  );
+  border-color: rgba(249, 232, 206, 0.4);
+  transform: translateY(-5px);
+}
+
+.education-card:hover::before {
+  opacity: 0.05;
+}
+
+/* Main education card styles */
+.education-card-main {
+  position: relative;
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.15) 0%, 
+    rgba(249, 232, 206, 0.1) 50%, 
+    rgba(139, 168, 136, 0.15) 100%
+  );
+  border: 1px solid rgba(249, 232, 206, 0.3);
+  backdrop-filter: blur(15px);
+  padding: 2rem;
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+}
+
+.education-card-main::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.education-card-main > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Add tilt effect to the education card itself */
+.education-card-no-hover:hover {
+  transform: rotate(-1deg) translateY(-8px) scale(1.02);
+  background: linear-gradient(145deg, 
+    rgba(189, 162, 141, 0.2) 0%, 
+    rgba(249, 232, 206, 0.15) 50%, 
+    rgba(139, 168, 136, 0.2) 100%
+  );
+  border-color: rgba(249, 232, 206, 0.5);
+  box-shadow: 0 15px 40px rgba(68, 98, 74, 0.2);
+}
+
+.education-card-no-hover:hover::before {
+  opacity: 0.08;
+}
+
+/* Keep the education items (text content) stable */
+.education-item {
+  transition: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .education-card-main {
+    padding: 1.5rem;
+  }
+  
+  /* Reduce tilt effect on tablets */
+  .education-card-no-hover:hover {
+    transform: rotate(-0.5deg) translateY(-5px) scale(1.01);
+  }
+}
+
+@media (max-width: 640px) {
+  .education-card-main {
+    padding: 1rem;
+  }
+  
+  /* Minimal tilt on mobile */
+  .education-card-no-hover:hover {
+    transform: rotate(-0.3deg) translateY(-3px);
+  }
+}
+
+/* Add this to your existing globals.css */
+
+/* Enhanced testimonials scrolling */
+.testimonials-scroll-container {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scroll-behavior: smooth;
+}
+
+.testimonials-scroll-container::-webkit-scrollbar {
+  display: none; /* WebKit */
+}
+
+/* Enhanced testimonials scrolling with visible scrollbar */
+.testimonials-scroll-container-with-scrollbar {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(189, 162, 141, 0.6) rgba(255, 255, 255, 0.1);
+}
+
+/* WebKit scrollbar styling */
+.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
+  height: 8px;
+}
+
+.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #bda28d, #8ba888);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(90deg, #d4b89d, #9bc89b);
+  box-shadow: 0 2px 6px rgba(189, 162, 141, 0.4);
+}
+
+/* Smooth cursor transitions */
+.testimonials-scroll-container-with-scrollbar:hover {
+  cursor: grab;
+}
+
+.testimonials-scroll-container-with-scrollbar:active {
+  cursor: grabbing;
+}
+
+/* Enhanced card focus states */
+.testimonials-scroll-container-with-scrollbar .scale-105 {
+  transform: scale(1.05);
+  box-shadow: 0 20px 60px rgba(68, 98, 74, 0.3);
+}
+
+.testimonials-scroll-container-with-scrollbar .scale-95 {
+  transform: scale(0.95);
+  filter: blur(0.5px);
+}
+
+/* Smooth transitions for all cards */
+.testimonials-scroll-container-with-scrollbar .flex > * {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Progress bar animations */
+.testimonials-scroll-container ~ div .bg-gradient-to-r {
+  transition: width 0.5s ease-in-out;
+  box-shadow: 0 0 10px rgba(189, 162, 141, 0.5);
+}
+
+/* Dot indicator enhancements */
+.testimonials-scroll-container ~ div button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonials-scroll-container ~ div button:hover {
+  transform: scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .testimonials-scroll-container-with-scrollbar {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: auto;
+  }
+  
+  .testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
+    height: 6px;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Enable native touch scrolling on mobile */
+  .testimonials-scroll-container-with-scrollbar {
+    scroll-snap-type: x mandatory;
+  }
+  
+  .testimonials-scroll-container-with-scrollbar .flex > * {
+    scroll-snap-align: start;
+  }
+  
+  .testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
+    height: 4px;
+  }
+}
+
+/* Smooth fade in animation for instruction text */
+@keyframes fadeInPulse {
+  0%, 100% { 
+    opacity: 0.6;
+    transform: translateY(0);
+  }
+  50% { 
+    opacity: 1;
+    transform: translateY(-2px);
+  }
+}
+
+.animate-pulse {
+  animation: fadeInPulse 2s ease-in-out infinite;
+}
+
+/* Enhanced hobby card styling */
+.hobby-card-container {
+  position: relative;
+}
+
+/* Simple hobby item styling */
+.hobby-card-container [class*="hobby-item-"] {
+  opacity: 1 !important;
+  visibility: visible !important;
+  z-index: 10;
+  position: absolute;
+}
+
+/* Contained hobby item spacing within bounds */
+.hobby-card-container .flex-1 > div {
+  opacity: 1 !important;
+  visibility: visible !important;
+  min-width: fit-content;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 140px; /* Prevent items from being too wide */
+}
+
+/* Hover effects that stay within bounds */
+.hobby-card-container .flex-1 > div:hover {
+  transform: scale(1.05) translateY(-1px);
+  box-shadow: 0 6px 20px rgba(189, 162, 141, 0.3);
+  z-index: 20 !important;
+}
+
+/* Ensure container clips content properly */
+.hobby-card-container .flex-1 {
+  position: relative;
+  overflow: hidden; /* Clip anything that goes outside */
+  height: 100%;
+}
+
+/* Set appropriate card height */
+.hobby-card-container {
+  height: 320px; /* Fixed height to match other cards */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .hobby-card-container .flex-1 > div {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+    max-width: 120px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hobby-card-container .flex-1 > div {
+    position: relative !important;
+    display: inline-block;
+    margin: 0.375rem;
+    left: auto !important;
+    top: auto !important;
+    max-width: none;
+  }
+  
+  .hobby-card-container .flex-1 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 1rem;
+    justify-content: center;
+    overflow: visible;
+  }
+}
+
+/* Enhanced portfolio card stacking with single card visibility */
+.portfolio-card-stack {
+  position: relative;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  will-change: transform, box-shadow, opacity;
+}
+
+.portfolio-card-stack::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/src/assets/images/grain.jpg');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.portfolio-card-stack > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Active card styling */
+.portfolio-card-active {
+  transform: translateY(0) scale(1) !important;
+  box-shadow: 0 25px 60px rgba(68, 98, 74, 0.25) !important;
+  opacity: 1 !important;
+}
+
+.portfolio-card-active::before {
+  opacity: 0.08;
+}
+
+/* Passed cards styling - hidden but maintaining stack structure */
+.portfolio-card-passed {
+  opacity: 0 !important;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+.portfolio-card-passed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: inherit;
+  z-index: 3;
+}
+
+/* Hover effects only for active cards */
+.portfolio-card-active:hover {
+  transform: translateY(-5px) scale(1.01) !important;
+  box-shadow: 0 35px 80px rgba(68, 98, 74, 0.3) !important;
+}
+
+/* Card entrance animation */
+@keyframes cardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.portfolio-card-active {
+  animation: cardReveal 0.6s ease-out;
+}
+
+/* Ensure clean transitions between cards */
+.portfolio-card-stack:not(.portfolio-card-active):not(.portfolio-card-passed) {
+  opacity: 0.7;
+  transform: translateY(20px) scale(0.98);
+}
+
+/* Hide interaction elements on non-active cards */
+.portfolio-card-stack:not(.portfolio-card-active) button {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.portfolio-card-stack:not(.portfolio-card-active) a {
+  pointer-events: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .portfolio-card-stack {
+    margin-bottom: 1rem;
+  }
+  
+  .portfolio-card-active:hover {
+    transform: translateY(-2px) scale(1.005) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  /* Simplify effects on mobile */
+  .portfolio-card-stack {
+    transform-style: flat;
+  }
+  
+  .portfolio-card-passed {
+    display: none; /* Completely hide passed cards on mobile */
+  }
+}
+
+/* Smooth scrolling indicator */
+.portfolio-card-active::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, rgba(189, 162, 141, 0.3), rgba(139, 168, 136, 0.3));
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0.5;
 }

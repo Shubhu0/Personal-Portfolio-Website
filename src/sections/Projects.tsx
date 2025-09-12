@@ -1,12 +1,13 @@
+"use client";
 import darkSaasLandingPage from "@/assets/images/dark-saas-landing-page.png";
 import lightSaasLandingPage from "@/assets/images/light-saas-landing-page.png";
 import aiStartupLandingPage from "@/assets/images/ai-startup-landing-page.png";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Card } from "@/components/Card";
+import { Fragment, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import CheckCircleIcon from "@/assets/icons/check-circle.svg";
 import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
-import grainImage from "@/assets/images/grain.jpg";
-import { SectionHeader } from "@/components/SectionHeader";
-import { Card } from "@/components/Card";
 
 const portfolioProjects = [
 	{
@@ -35,7 +36,7 @@ const portfolioProjects = [
 	},
 	{
 		company: "Quantum Dynamics",
-		year: "2023", // Fixed: was "bbbbb23"
+		year: "2023",
 		title: "AI Startup Landing Page",
 		results: [
 			{ title: "Enhanced user experience by 40%" },
@@ -48,65 +49,142 @@ const portfolioProjects = [
 ];
 
 export const ProjectsSection = () => {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [activeCard, setActiveCard] = useState(0);
+
+	useEffect(() => {
+		const handleScroll = () => {
+			if (containerRef.current) {
+				const containerRect = containerRef.current.getBoundingClientRect();
+				const containerTop = containerRect.top;
+				const containerHeight = containerRect.height;
+				const windowHeight = window.innerHeight;
+
+				// Calculate scroll progress through the container
+				const scrollProgress = Math.max(
+					0,
+					Math.min(
+						1,
+						(windowHeight * 0.7 - containerTop) /
+							(containerHeight - windowHeight)
+					)
+				);
+
+				// Determine which card should be active based on scroll progress
+				const totalCards = portfolioProjects.length;
+				const newActiveCard = Math.floor(scrollProgress * totalCards);
+				const clampedActiveCard = Math.max(
+					0,
+					Math.min(newActiveCard, totalCards - 1)
+				);
+
+				setActiveCard(clampedActiveCard);
+			}
+		};
+
+		window.addEventListener("scroll", handleScroll);
+		handleScroll(); // Initial check
+
+		return () => window.removeEventListener("scroll", handleScroll);
+	}, []);
+
 	return (
-		<section className="pb-16 lg:py-24">
+		<section className="pb-16 lg:py-24" id="projects">
 			<div className="container">
 				<SectionHeader
-					eyebrow="Real-World Projects"
+					eyebrow="Real-world Results"
 					title="Featured Projects"
-					description="See How I Transformed Concepts Into Digital Experiences"
+					description="See how I transformed concepts into engaging digital experiences."
 				/>
 
-				<div className="flex flex-col md:mt-20 mt-10 gap-20">
-					{portfolioProjects.map((project, projectIndex) => (
-						<Card
-							key={project.title}
-							className="px-8 pt-8 pb-0 md:pt-12 md:px-10
-            lg:px-16 lg:pt-20 sticky "
-							style={{
-								top: `calc(64px + ${projectIndex * 40}px`,
-							}}
-						>
-							<div className="lg:grid lg:grid-cols-2 lg:gap-16">
-								<div className="lg:pb-16">
-									<div className="bg-gradient-to-r from-emerald-300 to-sky-400 inline-flex font-bold uppercase tracking-widest text-sm text-transparent bg-clip-text gap-2">
-										<span>{project.company}</span>
-										<span>&bull;</span>
-										<span>{project.year}</span>
+				<div
+					ref={containerRef}
+					className="mt-10 md:mt-20 relative"
+					style={{ height: `${portfolioProjects.length * 100}vh` }}
+				>
+					{portfolioProjects.map((project, projectIndex) => {
+						const isActive = projectIndex === activeCard;
+						const isPassed = projectIndex < activeCard;
+						const stackOffset = Math.max(0, activeCard - projectIndex);
+
+						return (
+							<div
+								key={project.title}
+								className={`sticky top-16 transition-all duration-500 ease-out ${
+									isPassed ? "pointer-events-none" : ""
+								}`}
+								style={{
+									transform: `
+                    translateY(${isPassed ? -stackOffset * 8 : projectIndex * 12}px) 
+                    scale(${isPassed ? 0.95 - stackOffset * 0.02 : 1 - projectIndex * 0.02})
+                  `,
+									zIndex: portfolioProjects.length - projectIndex + (isActive ? 10 : 0),
+									opacity: isPassed ? 0.3 : 1,
+								}}
+							>
+								<Card
+									className={`px-8 pt-8 pb-0 md:pt-12 md:px-10 lg:pt-16 lg:px-20 portfolio-card-stack transition-all duration-500 ${
+										isActive ? "portfolio-card-active" : ""
+									} ${isPassed ? "portfolio-card-passed" : ""}`}
+									style={{
+										boxShadow: isActive
+											? "0 25px 60px rgba(68, 98, 74, 0.25)"
+											: isPassed
+												? "0 5px 15px rgba(68, 98, 74, 0.1)"
+												: "0 15px 40px rgba(68, 98, 74, 0.15)",
+										background: isPassed
+											? "linear-gradient(145deg, rgba(189, 162, 141, 0.05), rgba(249, 232, 206, 0.05))"
+											: undefined,
+									}}
+								>
+									<div className="lg:grid lg:grid-cols-2 lg:gap-16">
+										<div className="lg:pb-16">
+											<div className="bg-gradient-to-r from-emerald-300 to-sky-400 inline-flex gap-2 font-bold uppercase tracking-widest text-sm text-transparent bg-clip-text">
+												<span>{project.company}</span>
+												<span>&bull;</span>
+												<span>{project.year}</span>
+											</div>
+
+											<h3 className="font-serif text-2xl md:text-4xl md:mt-5 mt-2">
+												{project.title}
+											</h3>
+											<hr className="border-t-2 border-white/5 mt-4 md:mt-5" />
+											<ul className="flex flex-col gap-4 mt-4 md:mt-5">
+												{project.results.map((result, index) => (
+													<li
+														key={index}
+														className="flex gap-2 text-sm md:text-base text-white/50"
+													>
+														<CheckCircleIcon className="size-5 md:size-6" />
+														<span>{result.title}</span>
+													</li>
+												))}
+											</ul>
+											<a href={project.link}>
+												<button
+													className={`bg-white text-gray-950 h-12 w-full md:w-auto px-6 rounded-xl font-semibold inline-flex items-center justify-center gap-2 mt-8 transition-opacity duration-300 ${
+														!isActive
+															? "opacity-50 pointer-events-none"
+															: ""
+													}`}
+												>
+													<span>Visit Live Site</span>
+													<ArrowUpRightIcon className="size-4" />
+												</button>
+											</a>
+										</div>
+										<div className="relative">
+											<Image
+												src={project.image}
+												alt={project.title}
+												className="mt-8 -mb-4 md:-mb-0 lg:mt-0 lg:absolute lg:h-full lg:w-auto lg:max-w-none"
+											/>
+										</div>
 									</div>
-									<h3 className="font-serif text-2xl mt-2 font-bold md:text-4xl md:mt-5">
-										{project.title}
-									</h3>
-									<hr className="border-t-2 border-white/5 mt-4 md:mt-5" />
-									<ul className="flex flex-col mt-4 md:mt-5 gap-4">
-										{project.results.map((result, index) => (
-											<li key={index} className="flex gap-2 text-sm md:text-base text-white/50">
-												<CheckCircleIcon className="size-5 md:size-6" />
-												<span>{result.title}</span>
-											</li>
-										))}
-									</ul>
-                  
-									<a href={project.link} target="_blank" rel="noopener noreferrer">
-										<button className="bg-white text-gray-900 h-12 w-full rounded-xl
-                  font-semibold inline-flex items-center justify-center gap-2 mt-8
-                  md:w-auto px-6 hover:bg-gray-100 transition-colors">
-											Visit Live Site
-											<ArrowUpRightIcon className="size-4" />
-										</button>
-									</a>
-								</div>
-								<div className="relative">
-									<Image
-										src={project.image}
-										alt={project.title}
-										className="mt-8 -mb-4 md:-mb-0 
-                      lg:mt-0 lg:absolute lg:h-full lg:w-auto lg:max-w-none"
-									/>
-								</div>
+								</Card>
 							</div>
-						</Card>
-					))}
+						);
+					})}
 				</div>
 			</div>
 		</section>
