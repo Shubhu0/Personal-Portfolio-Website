@@ -9,42 +9,47 @@ import Image from "next/image";
 import CheckCircleIcon from "@/assets/icons/check-circle.svg";
 import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
 
+// All cards will use the .portfolio-card-stack and .portfolio-card classes for seamless styling
+import spotifyCloneImg from "@/assets/project-images/Spotify-Clone.png";
+import diningConciergeImg from "@/assets/project-images/Dining-Concierge-Chatbot.png";
+import depressionDetectionImg from "@/assets/project-images/Depression-Detection.png";
+
 const portfolioProjects = [
 	{
-		company: "Acme Corp",
-		year: "2022",
-		title: "Dark Saas Landing Page",
+		company: "Personal Project",
+		year: "June 2022",
+		title: "Spotify Clone",
 		results: [
-			{ title: "Enhanced user experience by 40%" },
-			{ title: "Improved site speed by 50%" },
-			{ title: "Increased mobile traffic by 35%" },
+			{ title: "Established a comprehensive Spotify Clone that garnered over 5,000 downloads, utilizing the Spotify API and Context API." },
+			{ title: "Created a Spotify clone with ReactJS and styled-components, integrating the Spotify API; raised state management using Context API, resulting in a 25% decrease in loading time and boosted user satisfaction." },
+			{ title: "Fulfilled functionalities for user login, playlist creation and exploration, searching and skipping tracks, etc." },
 		],
-		link: "https://youtu.be/4k7IdSLxh6w",
-		image: darkSaasLandingPage,
+		link: "#", // Replace with actual link if available
+		image: spotifyCloneImg,
 	},
 	{
-		company: "Innovative Co",
-		year: "2021",
-		title: "Light Saas Landing Page",
+		company: "AWS Cloud Project",
+		year: "May 2022",
+		title: "Dining Concierge Chatbot",
 		results: [
-			{ title: "Boosted sales by 20%" },
-			{ title: "Expanded customer reach by 35%" },
-			{ title: "Increased brand awareness by 15%" },
+			{ title: "Developed a serverless, AWS-based chatbot leveraging microservice architecture, Lex for conversational interactions, and DynamoDB with S3 bucket frontend hosting to suggest eateries using Yelp data." },
+			{ title: "Streamlined chatbot functionality using ElasticSearch, resulting in faster retrieval of restaurant information; decreased average response time from 10 seconds to 5 seconds, enhancing user experience." },
+			{ title: "Improved user experience by integrating a smooth notification system, resulting in a 35% increase in user engagement and timely delivery of restaurant recommendations to users' mobile devices." },
 		],
-		link: "https://youtu.be/7hi5zwO75yc",
-		image: lightSaasLandingPage,
+		link: "#", // Replace with actual link if available
+		image: diningConciergeImg,
 	},
 	{
-		company: "Quantum Dynamics",
-		year: "2023",
-		title: "AI Startup Landing Page",
+		company: "Capstone Project",
+		year: "Jan - Apr 2020",
+		title: "Depression Detection to Detect the Severity of Depression",
 		results: [
-			{ title: "Enhanced user experience by 40%" },
-			{ title: "Improved site speed by 50%" },
-			{ title: "Increased mobile traffic by 35%" },
+			{ title: "Applied a Twitter API data extraction tool with single classification model for cleaning, pre-processing, training, and analysing the mined data from 4000 users." },
+			{ title: "Adjusted model accuracy through strategic evaluation methods including confusion matrix analysis, AUC calculation, and ROC curve visualization; implemented a hybrid ensemble model that achieved an exceptional accuracy rate of 98.02%." },
+			{ title: "Presented project findings at the National Conference on Recent Development in Automobile and Mechanical Engineering." },
 		],
-		link: "https://youtu.be/Z7I5uSRHMHg",
-		image: aiStartupLandingPage,
+		link: "#", // Replace with actual link if available
+		image: depressionDetectionImg,
 	},
 ];
 
@@ -123,7 +128,7 @@ export const ProjectsSection = () => {
 								}}
 							>
 								<Card
-									className={`px-8 pt-8 pb-0 md:pt-12 md:px-10 lg:pt-16 lg:px-20 portfolio-card-stack transition-all duration-500 ${
+									className={`portfolio-card portfolio-card-stack px-8 pt-8 pb-0 md:pt-12 md:px-10 lg:pt-16 lg:px-20 transition-all duration-500 ${
 										isActive ? "portfolio-card-active" : ""
 									} ${isPassed ? "portfolio-card-passed" : ""}`}
 									style={{
@@ -149,14 +154,16 @@ export const ProjectsSection = () => {
 												{project.title}
 											</h3>
 											<hr className="border-t-2 border-white/5 mt-4 md:mt-5" />
-											<ul className="flex flex-col gap-4 mt-4 md:mt-5">
+											<ul className="flex flex-col gap-3 mt-4 md:mt-5">
 												{project.results.map((result, index) => (
 													<li
 														key={index}
-														className="flex gap-2 text-sm md:text-base text-white/50"
+														className="flex items-start gap-3 text-sm md:text-base text-white/80"
 													>
-														<CheckCircleIcon className="size-5 md:size-6" />
-														<span>{result.title}</span>
+														<span className="mt-1 flex-shrink-0">
+															<CheckCircleIcon className="w-4 h-4 md:w-5 md:h-5 text-emerald-400" />
+														</span>
+														<span className="leading-relaxed">{result.title}</span>
 													</li>
 												))}
 											</ul>
@@ -177,8 +184,10 @@ export const ProjectsSection = () => {
 											<Image
 												src={project.image}
 												alt={project.title}
+												width={800}
+												height={600}
 												className="mt-8 -mb-4 md:-mb-0 lg:mt-0 lg:absolute lg:h-full lg:w-auto lg:max-w-none"
-											/>
+											/> 
 										</div>
 									</div>
 								</Card>
