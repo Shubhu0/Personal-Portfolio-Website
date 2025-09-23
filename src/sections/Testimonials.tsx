@@ -34,71 +34,34 @@ const testimonials = [
 
 export const TestimonialsSection = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
-    const [isManualScrolling, setIsManualScrolling] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
 
-    // Handle mouse wheel scrolling
-    const handleWheel = (e: React.WheelEvent) => {
-        e.preventDefault();
-        
-        if (scrollContainerRef.current) {
-            setIsManualScrolling(true);
-            
-            const container = scrollContainerRef.current;
-            const cardWidth = 400; // Card width + gap
-            const maxIndex = testimonials.length - 1;
-            
-            if (e.deltaY > 0) {
-                // Scroll down/right - next testimonial
-                const nextIndex = currentIndex < maxIndex ? currentIndex + 1 : 0;
-                setCurrentIndex(nextIndex);
-                container.scrollTo({
-                    left: nextIndex * cardWidth,
-                    behavior: 'smooth'
-                });
-            } else {
-                // Scroll up/left - previous testimonial
-                const prevIndex = currentIndex > 0 ? currentIndex - 1 : maxIndex;
-                setCurrentIndex(prevIndex);
-                container.scrollTo({
-                    left: prevIndex * cardWidth,
-                    behavior: 'smooth'
-                });
-            }
-            
-            // Resume auto-scroll after 3 seconds of no interaction
-            setTimeout(() => setIsManualScrolling(false), 3000);
-        }
-    };
-
-    // Handle touch/mouse dragging for mobile
-    const handleMouseDown = () => {
-        setIsManualScrolling(true);
-        setTimeout(() => setIsManualScrolling(false), 3000);
-    };
-
-    // Auto-scroll functionality
+    // Infinite autoscroll
     useEffect(() => {
-        if (!isHovered && !isManualScrolling) {
+        if (!isPaused) {
             const interval = setInterval(() => {
-                if (scrollContainerRef.current) {
-                    const container = scrollContainerRef.current;
-                    const cardWidth = 400;
-                    const maxIndex = testimonials.length - 1;
-                    const nextIndex = currentIndex < maxIndex ? currentIndex + 1 : 0;
-                    
-                    setCurrentIndex(nextIndex);
-                    container.scrollTo({
-                        left: nextIndex * cardWidth,
-                        behavior: 'smooth'
-                    });
-                }
-            }, 4000); // Auto-scroll every 4 seconds
-
+                setCurrentIndex((prev) => {
+                    const next = (prev + 1) % testimonials.length;
+                    // Scroll to the next card
+                    if (scrollContainerRef.current) {
+                        const cardWidth = 400; // Card width + gap
+                        scrollContainerRef.current.scrollTo({
+                            left: next * cardWidth,
+                            behavior: 'smooth',
+                        });
+                    }
+                    return next;
+                });
+            }, 6000); // 6 seconds per testimonial
             return () => clearInterval(interval);
         }
-    }, [isHovered, isManualScrolling, currentIndex]);
+    }, [isPaused]);
+
+
+    // Pause on hover or click, resume on mouse leave
+    const handlePause = () => setIsPaused(true);
+    const handleResume = () => setIsPaused(false);
 
     return (
         <div className="py-16 lg:py-24">
@@ -110,29 +73,35 @@ export const TestimonialsSection = () => {
                 />
 
                 <div className="mt-12 lg:mt-20 relative">
-                    {/* Scroll instruction */}
                     <div className="text-center mb-6">
                         <p className="text-sm text-white/60 animate-pulse">
-                            Scroll with your mouse wheel to navigate through experiences
+                            Scrolls automatically. Hover or click a card to pause.
                         </p>
                     </div>
-
-                    {/* Scrollable container with visible scrollbar */}
-                    <div 
-                        className="overflow-x-auto overflow-y-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)] py-4 -my-4 testimonials-scroll-container-with-scrollbar cursor-grab active:cursor-grabbing"
-                        onMouseEnter={() => setIsHovered(true)}
-                        onMouseLeave={() => setIsHovered(false)}
-                        onWheel={handleWheel}
-                        onMouseDown={handleMouseDown}
+                    <div
+                        className="overflow-x-auto overflow-y-hidden py-4 -my-4 testimonials-scroll-container-with-scrollbar cursor-grab active:cursor-grabbing"
                         ref={scrollContainerRef}
+                        onMouseEnter={handlePause}
+                        onMouseLeave={handleResume}
                     >
                         <div className="flex gap-8 pr-8 flex-none">
                             {testimonials.map((testimonial, testimonialIndex) => (
                                 <Card
                                     key={`${testimonial.name}-${testimonialIndex}`}
+                                    onClick={() => {
+                                        setCurrentIndex(testimonialIndex);
+                                        setIsPaused(true);
+                                        if (scrollContainerRef.current) {
+                                            const cardWidth = 400;
+                                            scrollContainerRef.current.scrollTo({
+                                                left: testimonialIndex * cardWidth,
+                                                behavior: 'smooth',
+                                            });
+                                        }
+                                    }}
                                     className={`max-w-xs md:p-8 p-6 md:max-w-md transition-all duration-500 flex-shrink-0 ${
-                                        testimonialIndex === currentIndex 
-                                            ? 'scale-105 hover:-rotate-3 shadow-2xl' 
+                                        testimonialIndex === currentIndex
+                                            ? 'scale-105 hover:-rotate-3 shadow-2xl'
                                             : 'scale-95 opacity-70 hover:opacity-90'
                                     }`}
                                 >
@@ -142,7 +111,7 @@ export const TestimonialsSection = () => {
                                                 {testimonial.name}
                                             </div>
                                             <div className="text-sm text-[#bda28d]">
-                                                {testimonial.position}  
+                                                {testimonial.position}
                                             </div>
                                         </div>
                                     </div>
@@ -153,6 +122,7 @@ export const TestimonialsSection = () => {
                             ))}
                         </div>
                     </div>
+                    {/* No resume button, animation resumes on mouse leave */}
                 </div>
             </div>
         </div>
