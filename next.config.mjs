@@ -1,47 +1,19 @@
+// When building for GitHub Pages the site is served from a project subpath
+// (https://<user>.github.io/Personal-Portfolio-Website). The deploy workflow
+// sets GITHUB_PAGES=true so the basePath/assetPrefix are applied only there —
+// local `npm run dev` / `npm run build` keep serving from the root.
+const isPages = process.env.GITHUB_PAGES === "true";
+const repoBase = "/Personal-Portfolio-Website";
+const basePath = isPages ? repoBase : "";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack(config) {
-    // Grab the existing rule that handles SVG imports
-    const fileLoaderRule = config.module.rules.find((rule) =>
-      rule.test?.test?.(".svg")
-    );
-
-    config.module.rules.push(
-      // Reapply the existing rule, but only for svg imports ending in ?url
-      {
-        ...fileLoaderRule,
-        test: /\.svg$/i,
-        resourceQuery: /url/, // *.svg?url
-      },
-      // Convert all other *.svg imports to React components
-      {
-        test: /\.svg$/i,
-        issuer: fileLoaderRule.issuer,
-        resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
-        use: {
-          loader: "@svgr/webpack",
-          options: {
-            svgoConfig: {
-              plugins: [
-                {
-                  name: "preset-default",
-                  params: {
-                    overrides: {
-                      removeViewBox: false,
-                    },
-                  },
-                },
-              ],
-            },
-          },
-        },
-      }
-    );
-
-    // Modify the file loader rule to ignore *.svg, since we have it handled now.
-    fileLoaderRule.exclude = /\.svg$/i;
-
-    return config;
+  output: "export",
+  images: { unoptimized: true },
+  basePath,
+  assetPrefix: basePath || undefined,
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
   },
 };
 

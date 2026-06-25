@@ -2,829 +2,219 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  body {
-    margin: 0;
-    padding: 0;
-  }
-  
-  .seamless-bg-with-grain {
-    position: relative;
-    background: linear-gradient(135deg, 
-      #44624a 0%, 
-      #2c3e32 25%, 
-      #44624a 50%, 
-      #8ba888 75%, 
-      #44624a 100%
-    );
-    background-size: 400% 400%;
-    animation: gradientShift 15s ease infinite;
-    min-height: 100vh;
-  }
-  
-  .seamless-bg-with-grain::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url('/src/assets/images/grain.jpg');
-    background-repeat: repeat;
-    background-size: 200px 200px;
-    opacity: 0.08;
-    mix-blend-mode: overlay;
-    pointer-events: none;
-    z-index: 1;
-  }
-  
-  /* Ensure content appears above grain */
-  .seamless-bg-with-grain > * {
-    position: relative;
-    z-index: 2;
-  }
-  
-  @keyframes gradientShift {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
-  }
+/* ===================================================================
+   Design tokens
+   =================================================================== */
+:root {
+  --bg: #c3cb9f;
+  --panel: #b7c091;
+  --panel2: #bdc697;
+  --card: #ced5a8;
+  --ink: #262318;
+  --sub: #5d5a40;
+  --line: rgba(38, 35, 24, 0.2);
+  --accent: #6c7449;
+  --espresso: #5c4433;
+  --olive: #6c7449;
+  --serif: var(--font-serif), "Instrument Serif", Georgia, serif;
+  --sans: var(--font-sans), "Schibsted Grotesk", system-ui, sans-serif;
+  --mono: var(--font-mono), "JetBrains Mono", ui-monospace, monospace;
 }
 
-.hero-ring {
-  @apply border-2 border-emerald-300/20 rounded-full absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2;
-  box-shadow: 0 0 80px inset rgba(16, 185, 129, 0.1);
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  overflow-x: hidden;
+}
+::selection {
+  background: var(--accent);
+  color: #f1ece1;
+}
+a {
+  color: inherit;
+}
+img {
+  display: block;
+  max-width: 100%;
 }
 
-/* Update the existing .nav-item styles */
+/* ===================================================================
+   Keyframes
+   =================================================================== */
+@keyframes mq {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes mqr {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(32px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes imgIn {
+  from { clip-path: inset(0 0 100% 0); transform: scale(1.08); }
+  to { clip-path: inset(0 0 0 0); transform: scale(1); }
+}
+@keyframes heroUp {
+  from { transform: translateY(118%); }
+  to { transform: translateY(0); }
+}
+@keyframes hiIn {
+  from { opacity: 0; transform: translateY(28px); }
+  to { opacity: 1; transform: none; }
+}
 
-.nav-item {
-  @apply px-4 py-2 rounded-full text-sm font-medium cursor-pointer;
-  background: rgba(189, 162, 141, 0.1);
-  border: 1px solid rgba(249, 232, 206, 0.2);
-  position: relative;
+/* ===================================================================
+   Scroll-driven + load-in animations
+   =================================================================== */
+[data-reveal] {
+  animation: revealIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-timeline: view();
+  animation-range: entry 2% cover 36%;
+}
+[data-img-wrap] {
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+[data-img] {
+  animation: imgIn 1.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-timeline: view();
+  animation-range: entry 4% cover 42%;
+}
+[data-hero] {
+  display: block;
+  animation: heroUp 1.05s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+#heroH1 span:nth-child(1) [data-hero] { animation-delay: 0.12s; }
+#heroH1 span:nth-child(2) [data-hero] { animation-delay: 0.27s; }
+[data-hi] {
+  animation: hiIn 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+[data-hi="0"] { animation-delay: 0.06s; }
+[data-hi="180"] { animation-delay: 0.2s; }
+[data-hi="480"] { animation-delay: 0.5s; }
+[data-hi="600"] { animation-delay: 0.64s; }
+[data-hi="820"] { animation-delay: 0.82s; }
+[data-no-intro] [data-hero],
+[data-no-intro] [data-hi] { animation: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal],
+  [data-img],
+  [data-hero],
+  [data-hi] { animation: none; }
 }
 
-.nav-item::before {
-  content: '';
-  position: absolute;
+/* ===================================================================
+   Custom cursor
+   =================================================================== */
+.cur-dot,
+.cur-ring {
+  position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 80px 80px;
-  opacity: 0.02;
-  mix-blend-mode: overlay;
+  border-radius: 50%;
   pointer-events: none;
-  border-radius: inherit;
-  transition: opacity 0.3s ease;
-}
-
-.nav-item:hover::before {
-  opacity: 0.04;
-}
-
-.nav-item:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 8px 20px rgba(68, 98, 74, 0.3);
-}
-
-.nav-item:active {
-  transform: translateY(-1px) scale(1.02);
-}
-
-/* Active section indicator */
-.nav-item[style*="background: linear-gradient(135deg, #f9e8ce"] {
-  box-shadow: 0 4px 15px rgba(68, 98, 74, 0.4);
-}
-
-.nav-item[style*="background: linear-gradient(135deg, #f9e8ce"]:hover {
-  box-shadow: 0 8px 25px rgba(68, 98, 74, 0.5);
-}
-
-/* Button interaction styles */
-button {
-  @apply transition-all duration-300 ease-in-out;
-}
-
-button:hover {
-  @apply transform -translate-y-1;
-  box-shadow: 0 10px 25px rgba(68, 98, 74, 0.3);
-}
-
-button:active {
-  @apply scale-95;
-}
-
-/* Card styles with seamless integration and grain texture */
-.portfolio-card {
-  position: relative;
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.1) 0%, 
-    rgba(249, 232, 206, 0.05) 50%, 
-    rgba(139, 168, 136, 0.1) 100%
-  );
-  border: 1px solid rgba(249, 232, 206, 0.2);
-  backdrop-filter: blur(10px);
-  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow;
-}
-
-.portfolio-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 100px 100px;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 1;
-}
-
-.portfolio-card > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Smooth card entrance animations */
-@keyframes cardSlideIn {
-  from {
-    opacity: 0;
-    transform: translateY(100px) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Enhanced stacking visual effects */
-.portfolio-card:hover {
-  transform: translateY(-10px) scale(1.02);
-  box-shadow: 0 25px 60px rgba(68, 98, 74, 0.3) !important;
-}
-
-/* Perspective container for 3D effects */
-.portfolio-section-container {
-  perspective: 1000px;
-  perspective-origin: center top;
-}
-
-/* Smooth scrolling for the entire section */
-#projects {
-  scroll-behavior: smooth;
-}
-
-/* Card depth shadows for stacking effect */
-.portfolio-card[style*="translateY(0px)"] {
-  box-shadow: 0 10px 40px rgba(68, 98, 74, 0.15);
-}
-
-.portfolio-card[style*="translateY(20px)"] {
-  box-shadow: 0 20px 50px rgba(68, 98, 74, 0.2);
-}
-
-.portfolio-card[style*="translateY(40px)"] {
-  box-shadow: 0 30px 60px rgba(68, 98, 74, 0.25);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .portfolio-card {
-    margin-bottom: 2rem;
-  }
-  
-  .portfolio-card:hover {
-    transform: translateY(-5px) scale(1.01);
-  }
-}
-
-@media (max-width: 640px) {
-  /* Reduce 3D effects on mobile for better performance */
-  .portfolio-card {
-    transform-style: flat;
-  }
-  
-  .portfolio-card[style*="rotateX"] {
-    transform: translateY(0px) scale(1) !important;
-  }
-}
-
-/* Loading state for smooth entrance */
-.portfolio-card[style*="opacity: 0"] {
-  pointer-events: none;
-}
-
-.portfolio-card[style*="opacity: 1"] {
-  pointer-events: auto;
-}
-
-/* Remove tilt specifically for About section cards */
-#about .portfolio-card:hover {
-  transform: translateY(-5px) rotate(0deg);
-}
-
-@keyframes move-left {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-@keyframes ping-large {
-  75%, 100% {
-    transform: scale(3);
-    opacity: 0;
-  }
-}
-
-/* Seamless section transitions with subtle grain */
-.section-transition {
-  position: relative;
-  background: linear-gradient(to bottom,
-    transparent 0%,
-    rgba(68, 98, 74, 0.1) 50%,
-    transparent 100%
-  );
-}
-
-.section-transition::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 180px 180px;
-  opacity: 0.04;
-  mix-blend-mode: soft-light;
-  pointer-events: none;
-}
-
-/* Add these new styles to your existing CSS */
-
-/* Enhanced text cycling animation */
-.text-cycle-word {
-  display: inline-block;
-  animation: textCycle 0.6s ease-in-out;
-}
-
-@keyframes textCycle {
-  0% {
-    opacity: 0;
-    transform: translateY(20px) scale(0.95);
-  }
-  50% {
-    opacity: 0.7;
-    transform: translateY(-5px) scale(1.02);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* Gradient text animation */
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.gradient-text-animated {
-  background: linear-gradient(-45deg, #10b981, #bda28d, #f9e8ce, #8ba888);
-  background-size: 400% 400%;
-  animation: gradientShift 8s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Enhanced button hover effects */
-.grain-button:hover {
-  box-shadow: 0 15px 35px rgba(68, 98, 74, 0.4);
-  transform: translateY(-3px) scale(1.05);
-}
-
-.grain-button:active {
-  transform: translateY(-1px) scale(1.02);
-}
-
-/* Responsive text sizing */
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.5rem;
-    line-height: 1.1;
-  }
-}
-
-@media (max-width: 640px) {
-  .hero-title {
-    font-size: 2rem;
-    line-height: 1.2;
-  }
-}
-
-/* Add these styles to your existing CSS */
-
-/* Typewriter cursor animation */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-.typewriter-cursor {
-  animation: blink 1s infinite;
-  color: #10b981;
-}
-
-/* Ensure consistent height for typewriter */
-.typewriter-container {
-  min-height: 1.2em;
-  display: inline-block;
-}
-
-/* Education card styles */
-.education-card {
-  position: relative;
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.1) 0%, 
-    rgba(249, 232, 206, 0.05) 50%, 
-    rgba(139, 168, 136, 0.1) 100%
-  );
-  border: 1px solid rgba(249, 232, 206, 0.2);
-  backdrop-filter: blur(10px);
-}
-
-.education-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 150px 150px;
-  opacity: 0.03;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-.education-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-.education-card:hover {
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.15) 0%, 
-    rgba(249, 232, 206, 0.1) 50%, 
-    rgba(139, 168, 136, 0.15) 100%
-  );
-  border-color: rgba(249, 232, 206, 0.4);
-  transform: translateY(-5px);
-}
-
-.education-card:hover::before {
-  opacity: 0.05;
-}
-
-/* Main education card styles */
-.education-card-main {
-  position: relative;
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.15) 0%, 
-    rgba(249, 232, 206, 0.1) 50%, 
-    rgba(139, 168, 136, 0.15) 100%
-  );
-  border: 1px solid rgba(249, 232, 206, 0.3);
-  backdrop-filter: blur(15px);
-  padding: 2rem;
-  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
-}
-
-.education-card-main::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 100px 100px;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  border-radius: inherit;
-  transition: opacity 0.3s ease;
-}
-
-.education-card-main > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Add tilt effect to the education card itself */
-.education-card-no-hover:hover {
-  transform: rotate(-1deg) translateY(-8px) scale(1.02);
-  background: linear-gradient(145deg, 
-    rgba(189, 162, 141, 0.2) 0%, 
-    rgba(249, 232, 206, 0.15) 50%, 
-    rgba(139, 168, 136, 0.2) 100%
-  );
-  border-color: rgba(249, 232, 206, 0.5);
-  box-shadow: 0 15px 40px rgba(68, 98, 74, 0.2);
-}
-
-.education-card-no-hover:hover::before {
-  opacity: 0.08;
-}
-
-/* Keep the education items (text content) stable */
-.education-item {
-  transition: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .education-card-main {
-    padding: 1.5rem;
-  }
-  
-  /* Reduce tilt effect on tablets */
-  .education-card-no-hover:hover {
-    transform: rotate(-0.5deg) translateY(-5px) scale(1.01);
-  }
-}
-
-@media (max-width: 640px) {
-  .education-card-main {
-    padding: 1rem;
-  }
-  
-  /* Minimal tilt on mobile */
-  .education-card-no-hover:hover {
-    transform: rotate(-0.3deg) translateY(-3px);
-  }
-}
-
-/* Add this to your existing globals.css */
-
-/* Enhanced testimonials scrolling */
-.testimonials-scroll-container {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
-  scroll-behavior: smooth;
-}
-
-.testimonials-scroll-container::-webkit-scrollbar {
-  display: none; /* WebKit */
-}
-
-/* Enhanced testimonials scrolling with visible scrollbar */
-.testimonials-scroll-container-with-scrollbar {
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(189, 162, 141, 0.6) rgba(255, 255, 255, 0.1);
-}
-
-/* WebKit scrollbar styling */
-.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
-  height: 8px;
-}
-
-.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-}
-
-.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-thumb {
-  background: linear-gradient(90deg, #bda28d, #8ba888);
-  border-radius: 4px;
-  transition: background 0.3s ease;
-}
-
-.testimonials-scroll-container-with-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(90deg, #d4b89d, #9bc89b);
-  box-shadow: 0 2px 6px rgba(189, 162, 141, 0.4);
-}
-
-/* Smooth cursor transitions */
-.testimonials-scroll-container-with-scrollbar:hover {
-  cursor: grab;
-}
-
-.testimonials-scroll-container-with-scrollbar:active {
-  cursor: grabbing;
-}
-
-/* Enhanced card focus states */
-.testimonials-scroll-container-with-scrollbar .scale-105 {
-  transform: scale(1.05);
-  box-shadow: 0 20px 60px rgba(68, 98, 74, 0.3);
-}
-
-.testimonials-scroll-container-with-scrollbar .scale-95 {
-  transform: scale(0.95);
-  filter: blur(0.5px);
-}
-
-/* Smooth transitions for all cards */
-.testimonials-scroll-container-with-scrollbar .flex > * {
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* Progress bar animations */
-.testimonials-scroll-container ~ div .bg-gradient-to-r {
-  transition: width 0.5s ease-in-out;
-  box-shadow: 0 0 10px rgba(189, 162, 141, 0.5);
-}
-
-/* Dot indicator enhancements */
-.testimonials-scroll-container ~ div button {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.testimonials-scroll-container ~ div button:hover {
-  transform: scale(1.2);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .testimonials-scroll-container-with-scrollbar {
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: auto;
-  }
-  
-  .testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
-    height: 6px;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Enable native touch scrolling on mobile */
-  .testimonials-scroll-container-with-scrollbar {
-    scroll-snap-type: x mandatory;
-  }
-  
-  .testimonials-scroll-container-with-scrollbar .flex > * {
-    scroll-snap-align: start;
-  }
-  
-  .testimonials-scroll-container-with-scrollbar::-webkit-scrollbar {
-    height: 4px;
-  }
-}
-
-/* Smooth fade in animation for instruction text */
-@keyframes fadeInPulse {
-  0%, 100% { 
-    opacity: 0.6;
-    transform: translateY(0);
-  }
-  50% { 
-    opacity: 1;
-    transform: translateY(-2px);
-  }
-}
-
-.animate-pulse {
-  animation: fadeInPulse 2s ease-in-out infinite;
-}
-
-/* Enhanced hobby card styling */
-.hobby-card-container {
-  position: relative;
-}
-
-/* Simple hobby item styling */
-.hobby-card-container [class*="hobby-item-"] {
-  opacity: 1 !important;
-  visibility: visible !important;
-  z-index: 10;
-  position: absolute;
-}
-
-/* Contained hobby item spacing within bounds */
-.hobby-card-container .flex-1 > div {
-  opacity: 1 !important;
-  visibility: visible !important;
-  min-width: fit-content;
+  z-index: 9999;
+  mix-blend-mode: multiply;
+}
+.cur-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  transform: translate(-50%, -50%);
+}
+.cur-ring {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid var(--accent);
+  transform: translate(-50%, -50%);
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, opacity 0.25s;
+}
+
+/* ===================================================================
+   Reusable building blocks
+   =================================================================== */
+.wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.h-section {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(38px, 6vw, 76px);
+  line-height: 0.96;
+  letter-spacing: -1px;
+}
+.tag {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 30px;
   white-space: nowrap;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  max-width: 140px; /* Prevent items from being too wide */
+}
+.btn {
+  font-family: var(--sans);
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 44px;
+}
+.btn--solid {
+  padding: 16px 26px;
+  background: var(--ink);
+  color: var(--bg);
+}
+.btn--outline {
+  padding: 16px 26px;
+  border: 1.5px solid var(--line);
 }
 
-/* Hover effects that stay within bounds */
-.hobby-card-container .flex-1 > div:hover {
-  transform: scale(1.05) translateY(-1px);
-  box-shadow: 0 6px 20px rgba(189, 162, 141, 0.3);
-  z-index: 20 !important;
+/* ===================================================================
+   Responsive
+   =================================================================== */
+@media (max-width: 900px) {
+  .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
+  .proj-card-inner { grid-template-columns: 1fr !important; }
+  .proj-card-inner .proj-media { min-height: 260px; }
+  .exp-row { grid-template-columns: 1fr !important; gap: 10px !important; }
+  .about-2 { grid-template-columns: 1fr !important; }
+  .section-head { flex-direction: column; align-items: flex-start !important; }
 }
-
-/* Ensure container clips content properly */
-.hobby-card-container .flex-1 {
-  position: relative;
-  overflow: hidden; /* Clip anything that goes outside */
-  height: 100%;
-}
-
-/* Set appropriate card height */
-.hobby-card-container {
-  height: 320px; /* Fixed height to match other cards */
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .hobby-card-container .flex-1 > div {
-    font-size: 0.875rem;
-    padding: 0.375rem 0.75rem;
-    max-width: 120px;
-  }
-}
-
 @media (max-width: 640px) {
-  .hobby-card-container .flex-1 > div {
-    position: relative !important;
-    display: inline-block;
-    margin: 0.375rem;
-    left: auto !important;
-    top: auto !important;
-    max-width: none;
-  }
-  
-  .hobby-card-container .flex-1 {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    padding: 1rem;
-    justify-content: center;
-    overflow: visible;
-  }
+  .nav-bar { padding: 14px 20px !important; }
+  .nav-links { gap: 18px !important; }
+  .pad-x { padding-left: 20px !important; padding-right: 20px !important; }
 }
-
-/* Enhanced portfolio card stacking with single card visibility */
-.portfolio-card-stack {
-  position: relative;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  will-change: transform, box-shadow, opacity;
-}
-
-.portfolio-card-stack::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: url('/src/assets/images/grain.jpg');
-  background-repeat: repeat;
-  background-size: 100px 100px;
-  opacity: 0.05;
-  mix-blend-mode: overlay;
-  pointer-events: none;
-  border-radius: inherit;
-  z-index: 1;
-}
-
-.portfolio-card-stack > * {
-  position: relative;
-  z-index: 2;
-}
-
-/* Active card styling */
-.portfolio-card-active {
-  transform: translateY(0) scale(1) !important;
-  box-shadow: 0 25px 60px rgba(68, 98, 74, 0.25) !important;
-  opacity: 1 !important;
-}
-
-.portfolio-card-active::before {
-  opacity: 0.08;
-}
-
-/* Passed cards styling - hidden but maintaining stack structure */
-.portfolio-card-passed {
-  opacity: 0 !important;
-  pointer-events: none;
-  filter: blur(1px);
-}
-
-.portfolio-card-passed::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: inherit;
-  z-index: 3;
-}
-
-/* Hover effects only for active cards */
-.portfolio-card-active:hover {
-  transform: translateY(-5px) scale(1.01) !important;
-  box-shadow: 0 35px 80px rgba(68, 98, 74, 0.3) !important;
-}
-
-/* Card entrance animation */
-@keyframes cardReveal {
-  from {
-    opacity: 0;
-    transform: translateY(30px) scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-.portfolio-card-active {
-  animation: cardReveal 0.6s ease-out;
-}
-
-/* Ensure clean transitions between cards */
-.portfolio-card-stack:not(.portfolio-card-active):not(.portfolio-card-passed) {
-  opacity: 0.7;
-  transform: translateY(20px) scale(0.98);
-}
-
-/* Hide interaction elements on non-active cards */
-.portfolio-card-stack:not(.portfolio-card-active) button {
-  opacity: 0.3;
-  pointer-events: none;
-}
-
-.portfolio-card-stack:not(.portfolio-card-active) a {
-  pointer-events: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .portfolio-card-stack {
-    margin-bottom: 1rem;
-  }
-  
-  .portfolio-card-active:hover {
-    transform: translateY(-2px) scale(1.005) !important;
-  }
-}
-
-@media (max-width: 640px) {
-  /* Simplify effects on mobile */
-  .portfolio-card-stack {
-    transform-style: flat;
-  }
-  
-  .portfolio-card-passed {
-    display: none; /* Completely hide passed cards on mobile */
-  }
-}
-
-/* Smooth scrolling indicator */
-.portfolio-card-active::after {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  background: linear-gradient(45deg, rgba(189, 162, 141, 0.3), rgba(139, 168, 136, 0.3));
-  border-radius: inherit;
-  z-index: -1;
-  opacity: 0.5;
+@media (max-width: 560px) {
+  .nav-links a[data-navlink] { display: none; }
 }

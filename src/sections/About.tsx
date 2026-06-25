@@ -1,284 +1,217 @@
-"use client";
+import { books, certifications, education, hobbies, toolbox } from "@/data/portfolio";
 
-import { Card } from "@/components/Card";
-import { SectionHeader } from "@/components/SectionHeader";
-import StarIcon from "@/assets/icons/star.svg";
-import Image from "next/image";
-import bookImage from "@/assets/images/book-cover.png";
-import bookImage2 from "@/assets/images/book-cover-2.jpg";
-import JavascriptIcon from "@/assets/icons/square-js.svg";
-import HtmlIcon from "@/assets/icons/html5.svg";
-import PythonIcon from "@/assets/icons/icons8-python.svg";
-import CssIcon from "@/assets/icons/css3.svg";
-import ReactIcon from "@/assets/icons/react.svg";
-import GithubIcon from "@/assets/icons/github.svg";
-import SqlIcon from "@/assets/icons/database-checkmark-icon.svg";
-import AwsIcon from "@/assets/icons/aws-icon.svg";
-import SparkIcon from "@/assets/icons/apache_spark-ar21.svg";
-import DockerIcon from "@/assets/icons/docker-icon.svg";
-import mapImage from "@/assets/images/map-image.jpg";
-import { CardHeader } from "@/components/CardHeader";
-import { ToolboxItems } from "@/components/ToolboxItems";
-import { useState } from "react";
-
-export const toolboxItems = [
-    {
-        title: "Javascript",
-        iconType: JavascriptIcon,
-    },
-    {
-        title: "HTML5",
-        iconType: HtmlIcon,
-    },
-    {
-        title: "Python",
-        iconType: PythonIcon,
-    },
-    {
-        title: "CSS3",
-        iconType: CssIcon,
-    },
-    {
-        title: "React",
-        iconType: ReactIcon,
-    },
-    {
-        title: "Github",
-        iconType: GithubIcon,
-    },
-    {
-        title: "SQL",
-        iconType: SqlIcon,
-    },
-    {
-        title: "AWS",
-        iconType: AwsIcon,
-    },
-    {
-        title: "Apache Spark",
-        iconType: SparkIcon,
-    },
-    {
-        title: "Docker",
-        iconType: DockerIcon,
-    },
-];
-
-export const hobbies = [
-    {
-        title: "Photography",
-        emoji: "📸",
-        left: "8%",
-        top: "12%",
-    },
-    {
-        title: "Gaming",
-        emoji: "🎮",
-        left: "65%",
-        top: "8%",
-    },
-    {
-        title: "Hiking",
-        emoji: "🥾",
-        left: "12%",
-        top: "45%",
-    },
-    {
-        title: "Music",
-        emoji: "🎧",
-        left: "68%",
-        top: "38%",
-    },
-    {
-        title: "Fitness",
-        emoji: "🏋️‍♂️",
-        left: "8%",
-        top: "75%",
-    },
-    {
-        title: "Reading",
-        emoji: "📖",
-        left: "40%",
-        top: "25%",
-    },
-    {
-        title: "Cooking",
-        emoji: "👨‍🍳",
-        left: "50%",
-        top: "68%",
-    },
-];
-
-// Education data
-export const mastersDegree = {
-    degree: "Master of Science",
-    field: "Computer Science",
-    school: "New York University",
-    period: "2021 - 2023",
-    location: "NYC, NY",
-    description:
-        "Specialized in Software Engineering and Data Science with focus on machine learning and distributed systems",
+const cardBase: React.CSSProperties = {
+  padding: "34px",
+  border: "1px solid var(--line)",
+  borderRadius: "8px",
+  background: "var(--panel)",
 };
 
-export const bachelorsDegree = {
-    degree: "Bachelor of Engineering",
-    field: "Information Technology",
-    school: "SRM Institute of Science and Technology",
-    period: "2016 - 2020",
-    location: "Chennai, TN",
-    description:
-        "Foundation in Computer Science and Programming with emphasis on software development and database systems",
+const microLabel: React.CSSProperties = {
+  fontFamily: "var(--mono)",
+  fontSize: "11px",
+  letterSpacing: "1px",
+  textTransform: "uppercase",
+  color: "var(--sub)",
 };
 
-export const AboutSection = () => {
-    const [isHovered, setIsHovered] = useState(false);
+function ToolboxRow({ ariaHidden = false }: { ariaHidden?: boolean }) {
+  return (
+    <span style={{ display: "flex", gap: "14px", paddingRight: "14px" }} aria-hidden={ariaHidden || undefined}>
+      {toolbox.map((tool) => (
+        <span
+          key={tool.label}
+          style={{
+            fontFamily: "var(--serif)",
+            fontSize: "30px",
+            padding: "6px 22px",
+            border: "1px solid var(--line)",
+            borderRadius: "40px",
+            color: tool.accent ? "var(--accent)" : undefined,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {tool.label}
+        </span>
+      ))}
+    </span>
+  );
+}
 
-    return (
-        <div id="about" className="py-20 lg:py-28">
-            <div className="container">
-                <SectionHeader
-                    eyebrow="About Me"
-                    title="A Glimpse Into My World"
-                    description="Learn more about who I am, what I do and what inspires me."
-                />
-                <div className="mt-20 flex flex-col gap-8">
-                    {/* First row - Education Section */}
-                    <Card className="education-card-main education-card-no-hover">
-                        <CardHeader
-                            title="Education"
-                            description="My academic journey and foundation in computer science"
-                            className="mb-8"
-                        />
-
-                        {/* Education Timeline */}
-                        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
-                            {/* Masters Degree */}
-                            <div className="education-item">
-                                <div className="mb-3">
-                                    <h3 className="text-xl font-bold text-[#f9e8ce] leading-tight">
-                                        {mastersDegree.degree}
-                                    </h3>
-                                    <p className="text-lg font-semibold text-[#bda28d] mt-1">
-                                        {mastersDegree.field}
-                                    </p>
-                                </div>
-
-                                <div className="mb-4">
-                                    <p className="text-base font-semibold text-[#bda28d]">
-                                        {mastersDegree.school}
-                                    </p>
-                                    <p className="text-sm text-[#8ba888] mt-1">
-                                        {mastersDegree.period} • {mastersDegree.location}
-                                    </p>
-                                </div>
-
-                                <p className="text-sm text-[#bda28d]/90 leading-relaxed">
-                                    {mastersDegree.description}
-                                </p>
-                            </div>
-
-                            {/* Bachelors Degree */}
-                            <div className="education-item">
-                                <div className="mb-3">
-                                    <h3 className="text-xl font-bold text-[#f9e8ce] leading-tight">
-                                        {bachelorsDegree.degree}
-                                    </h3>
-                                    <p className="text-lg font-semibold text-[#bda28d] mt-1">
-                                        {bachelorsDegree.field}
-                                    </p>
-                                </div>
-
-                                <div className="mb-4">
-                                    <p className="text-base font-semibold text-[#bda28d]">
-                                        {bachelorsDegree.school}
-                                    </p>
-                                    <p className="text-sm text-[#8ba888] mt-1">
-                                        {bachelorsDegree.period} • {bachelorsDegree.location}
-                                    </p>
-                                </div>
-
-                                <p className="text-sm text-[#bda28d]/90 leading-relaxed">
-                                    {bachelorsDegree.description}
-                                </p>
-                            </div>
-                        </div>
-                    </Card>
-
-                    {/* Second row - Books and Toolbox */}
-                    <div className="grid grid-cols-1 gap-8 md:grid md:grid-cols-5 lg:grid-cols-3">
-                        <Card className="h-[320px] md:col-span-2 lg:col-span-1 hover:rotate-0 hover:transform-none">
-                            <CardHeader
-                                title="My Reads"
-                                description="Explore the books that helped shape my perspectives."
-                            />
-                            <div className="w-40 flex mx-auto justify-center mt-2 space-x-4 md:mt-0">
-                                <Image src={bookImage} alt="Book cover" />
-                                <Image src={bookImage2} alt="Book cover 2" />
-                            </div>
-                        </Card>
-
-                        <Card className="h-[320px] md:col-span-3 lg:col-span-2 hover:rotate-0 hover:transform-none toolbox-card">
-                            <CardHeader
-                                title="My Toolbox"
-                                description="Explore the technologies and tools I've used and learnt."
-                                className=""
-                            />
-                            <div
-                                className="mt-6 overflow-hidden toolbox-container"
-                                onMouseEnter={() => setIsHovered(true)}
-                                onMouseLeave={() => setIsHovered(false)}
-                            >
-                                <ToolboxItems
-                                    items={toolboxItems}
-                                    isPaused={isHovered}
-                                />
-                                <ToolboxItems
-                                    items={toolboxItems}
-                                    className="mt-6"
-                                    itemsWrapperClassName="[animation-direction:reverse]"
-                                    isPaused={isHovered}
-                                />
-                            </div>
-                        </Card>
-                    </div>
-
-                    {/* Third row - Hobbies and Map */}
-                    <div className="grid grid-cols-1 md:grid-cols-5 gap-8 lg:grid-cols-3">
-                        <Card className="h-[320px] p-0 flex flex-col md:col-span-3 lg:col-span-2 hover:rotate-0 hover:transform-none">
-                            <CardHeader
-                                title="Beyond The Code"
-                                description="Explore my hobbies and interests beyond the digital world."
-                                className="px-6 py-6"
-                            />
-                            <div className="flex-1 relative px-8 py-8 min-h-[240px]">
-                                {hobbies.map((hobby) => (
-                                    <div
-                                        key={hobby.title}
-                                        className="inline-flex gap-2 px-5 py-2.5 bg-gradient-to-r from-[#bda28d] to-[#f9e8ce] rounded-full absolute z-10 transition-all duration-300 hover:scale-110 hover:shadow-xl hover:z-20"
-                                        style={{
-                                            left: hobby.left,
-                                            top: hobby.top,
-                                        }}
-                                    >
-                                        <span className="font-medium text-gray-900 text-sm">
-                                            {hobby.title}
-                                        </span>
-                                        <span className="text-base">{hobby.emoji}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </Card>
-
-                        <Card className="h-[320px] p-0 md:col-span-2 lg:col-span-1 hover:rotate-0 hover:transform-none">
-                            <Image
-                                src={mapImage}
-                                alt="map"
-                                className="h-full w-full object-cover"
-                            />
-                        </Card>
-                    </div>
-                </div>
-            </div>
+export function About() {
+  return (
+    <section
+      id="about"
+      className="pad-x"
+      style={{ padding: "130px 40px 90px", maxWidth: "1320px", margin: "0 auto" }}
+    >
+      <div style={{ marginBottom: "70px" }}>
+        <div className="eyebrow" style={{ marginBottom: "16px" }} data-reveal>
+          ( 03 ) — About
         </div>
-    );
-};
+        <h2 className="h-section" style={{ maxWidth: "780px" }} data-reveal data-reveal-delay="80">
+          A glimpse into my world
+        </h2>
+      </div>
+
+      {/* Education */}
+      <div className="about-2" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px", marginBottom: "24px" }}>
+        {education.map((edu, i) => (
+          <div key={edu.index} data-reveal data-reveal-delay={i === 0 ? undefined : "100"} style={cardBase}>
+            <div style={{ ...microLabel, marginBottom: "22px" }}>Education · {edu.index}</div>
+            <h3 style={{ fontFamily: "var(--serif)", fontSize: "34px", lineHeight: 1.02, marginBottom: "6px" }}>
+              {edu.degree}
+            </h3>
+            <p style={{ fontSize: "15px", color: "var(--ink)", marginBottom: "4px" }}>{edu.school}</p>
+            <p style={{ fontFamily: "var(--mono)", fontSize: "12px", color: "var(--sub)", marginBottom: "16px" }}>
+              {edu.period}
+            </p>
+            <p style={{ fontSize: "14px", lineHeight: 1.55, color: "var(--sub)" }}>{edu.description}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Toolbox marquee */}
+      <div data-reveal style={{ border: "1px solid var(--line)", borderRadius: "8px", overflow: "hidden", marginBottom: "24px" }}>
+        <div style={{ ...microLabel, padding: "22px 26px 0" }}>
+          My toolbox <span style={{ opacity: 0.6, textTransform: "none" }}>— hover to pause</span>
+        </div>
+        <div style={{ overflow: "hidden", padding: "18px 0 24px" }}>
+          <div
+            data-toolbox
+            style={{
+              display: "flex",
+              width: "max-content",
+              whiteSpace: "nowrap",
+              animation: "mqr 40s linear infinite",
+              willChange: "transform",
+              cursor: "default",
+            }}
+          >
+            <ToolboxRow />
+            <ToolboxRow ariaHidden />
+          </div>
+        </div>
+      </div>
+
+      {/* Certifications */}
+      <div
+        data-reveal
+        style={{ border: "1px solid var(--line)", borderRadius: "8px", background: "var(--panel)", padding: "30px 32px", marginBottom: "24px" }}
+      >
+        <div style={microLabel}>Certifications</div>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "14px", marginTop: "18px" }}>
+          {certifications.map((cert) => (
+            <span
+              key={`${cert.org}-${cert.name}`}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "5px",
+                padding: "14px 20px",
+                border: "1px solid var(--line)",
+                borderRadius: "12px",
+                background: "var(--bg)",
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "var(--mono)",
+                  fontSize: "9px",
+                  letterSpacing: "1px",
+                  textTransform: "uppercase",
+                  color: "var(--accent)",
+                }}
+              >
+                {cert.org}
+              </span>
+              <span style={{ fontFamily: "var(--sans)", fontWeight: 600, fontSize: "15px" }}>{cert.name}</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "24px" }}>
+        {/* Reads */}
+        <div data-reveal style={cardBase}>
+          <div style={{ ...microLabel, marginBottom: "8px" }}>My reads</div>
+          <h3 style={{ fontFamily: "var(--serif)", fontSize: "30px", marginBottom: "24px" }}>
+            Books that shaped my thinking
+          </h3>
+          <div style={{ display: "flex", gap: "22px", flexWrap: "wrap" }}>
+            {books.map((book) => (
+              <div
+                key={book.title}
+                style={{
+                  width: "150px",
+                  aspectRatio: "3 / 4.4",
+                  borderRadius: "5px",
+                  background: book.color === "accent" ? "var(--accent)" : "var(--ink)",
+                  color: "var(--bg)",
+                  padding: "18px 15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                  boxShadow: "0 18px 44px rgba(38,35,24,.26)",
+                  transform: `rotate(${book.rotate}deg)`,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: "var(--mono)",
+                    fontSize: "9px",
+                    letterSpacing: "1.5px",
+                    textTransform: "uppercase",
+                    opacity: book.color === "accent" ? 0.6 : 0.55,
+                  }}
+                >
+                  {book.category}
+                </span>
+                <span>
+                  <span style={{ display: "block", fontFamily: "var(--serif)", fontSize: "24px", lineHeight: 1.04 }}>
+                    {book.title}
+                  </span>
+                  <span
+                    style={{
+                      display: "block",
+                      fontFamily: "var(--mono)",
+                      fontSize: "10px",
+                      marginTop: "10px",
+                      opacity: book.color === "accent" ? 0.75 : 0.7,
+                    }}
+                  >
+                    {book.author}
+                  </span>
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Hobbies */}
+        <div data-reveal data-reveal-delay="100" style={cardBase}>
+          <div style={{ ...microLabel, marginBottom: "8px" }}>Beyond the code</div>
+          <h3 style={{ fontFamily: "var(--serif)", fontSize: "30px", marginBottom: "24px" }}>Where my curiosity goes</h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}>
+            {hobbies.map((hobby) => (
+              <span
+                key={hobby}
+                data-cursor
+                style={{
+                  fontFamily: "var(--sans)",
+                  fontWeight: 500,
+                  fontSize: "15px",
+                  padding: "11px 18px",
+                  border: "1px solid var(--line)",
+                  borderRadius: "40px",
+                }}
+              >
+                {hobby}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

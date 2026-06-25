@@ -1,48 +1,107 @@
-import ArrowUpRightIcon from "@/assets/icons/arrow-up-right.svg";
-import grainImage from "@/assets/images/grain.jpg";
+import { social } from "@/data/portfolio";
 
-export const ContactSection = () => {
+const footerLink: React.CSSProperties = { textDecoration: "none", opacity: 0.75 };
+
+export function Contact() {
   return (
-  <div className="py-16 pt-12 lg:py-24 lg:pt-20">
-    <div className="container">
-      <div className="bg-gradient-to-r from-[#bda28d]
-                  to-[#f9e8ce] text-gray-900 py-8 px-10
-                  rounded-3xl text-center md:text-left relative overflow-hidden z-0">
-        <div 
-        className="absolute inset-0 opacity-5 -z-10"
-        style={{
-          backgroundImage: `url(${grainImage.src})`,
-        }}>
-
+    <section
+      id="contact"
+      className="pad-x"
+      style={{ padding: "130px 40px 70px", background: "var(--ink)", color: "var(--bg)", position: "relative", overflow: "hidden" }}
+    >
+      <div className="wrap" style={{ maxWidth: "1320px", margin: "0 auto", position: "relative", zIndex: 2 }}>
+        <div className="eyebrow" style={{ marginBottom: "30px" }} data-reveal>
+          ( 04 ) — Contact
         </div>
-          <div className="flex flex-col md:flex-row gap-8 md:gap-16 items-center">
-            <div>
-              <h2 className="font-serif font-semibold text-2xl md:text-3xl">
-                Let's create something amazing together!
-              </h2>
+        <h2
+          style={{
+            fontFamily: "var(--serif)",
+            fontWeight: 400,
+            fontSize: "clamp(46px,8.5vw,140px)",
+            lineHeight: 0.92,
+            letterSpacing: "-2px",
+            maxWidth: "1100px",
+          }}
+          data-reveal
+          data-reveal-delay="80"
+        >
+          Let&apos;s create something <span style={{ fontStyle: "italic", color: "var(--accent)" }}>amazing</span> together
+        </h2>
+        <p
+          style={{ maxWidth: "520px", marginTop: "34px", fontSize: "18px", lineHeight: 1.55, color: "rgba(241,236,225,.7)" }}
+          data-reveal
+          data-reveal-delay="160"
+        >
+          If you think I&apos;d be a great fit for your team and you&apos;re excited about building innovative products —
+          let&apos;s connect.
+        </p>
+        <a
+          href={social.linkedin}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-magnetic
+          data-cursor
+          data-invert
+          data-reveal
+          data-reveal-delay="220"
+          style={{
+            fontFamily: "var(--sans)",
+            fontWeight: 600,
+            fontSize: "16px",
+            textDecoration: "none",
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "12px",
+            marginTop: "40px",
+            padding: "18px 30px",
+            background: "var(--bg)",
+            color: "var(--ink)",
+            borderRadius: "46px",
+          }}
+        >
+          Get in touch <span style={{ fontFamily: "var(--serif)", fontSize: "22px", lineHeight: 0 }}>↗</span>
+        </a>
 
-              <p className="text-sm mt-2 md:text-base">
-                If you believe I could be a great fit for your organization and you're excited about the possibility of collaborating on innovative projects, let's connect!
-              </p>
-            </div>
-            
-            <div>
-              <a href="https://www.linkedin.com/in/shubhankar-mishra23/" target="_blank" rel="noopener noreferrer">
-                <button className="text-gray-900 bg-white 
-                inline-flex items-center px-6 h-12 rounded-xl gap-2 w-max 
-                border border-white"
-                >
-                  <span className="font-semibold">
-                    Contact Me
-                  </span>
-                  
-                  <ArrowUpRightIcon className='size-4'/>
-                </button>
-              </a>
-            </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+            flexWrap: "wrap",
+            gap: "24px",
+            marginTop: "120px",
+            paddingTop: "30px",
+            borderTop: "1px solid rgba(241,236,225,.18)",
+          }}
+        >
+          <div style={{ fontFamily: "var(--serif)", fontSize: "24px" }}>
+            Shubhankar<span style={{ color: "var(--accent)" }}>.</span>
           </div>
+          <div
+            style={{
+              display: "flex",
+              gap: "26px",
+              fontFamily: "var(--mono)",
+              fontSize: "12px",
+              letterSpacing: ".5px",
+              textTransform: "uppercase",
+            }}
+          >
+            <a href={social.twitter} target="_blank" rel="noopener noreferrer" data-invert style={footerLink}>
+              Twitter
+            </a>
+            <a href={social.instagram} target="_blank" rel="noopener noreferrer" data-invert style={footerLink}>
+              Instagram
+            </a>
+            <a href={social.linkedin} target="_blank" rel="noopener noreferrer" data-invert style={footerLink}>
+              LinkedIn
+            </a>
+          </div>
+          <div style={{ fontFamily: "var(--mono)", fontSize: "12px", color: "rgba(241,236,225,.5)" }}>
+            © 2026 — All rights reserved
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-);
-};
+    </section>
+  );
+}

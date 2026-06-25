@@ -1,31 +1,52 @@
 import type { Metadata } from "next";
-import { Inter, Calistoga } from "next/font/google";
+import { Instrument_Serif, Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
+import { twMerge } from "tailwind-merge";
+
 import "./globals.css";
 
-const inter = Inter({ 
+const serif = Instrument_Serif({
   subsets: ["latin"],
-  variable: "--font-sans" 
+  weight: "400",
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
 });
 
-const calistoga = Calistoga({
+const sans = Schibsted_Grotesk({
   subsets: ["latin"],
-  variable: "--font-serif",
-  weight: ["400"]
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const mono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Personal Portfolio",
-  description: "My personal portfolio website",
+  title: "Shubhankar Mishra — Software Engineer",
+  description:
+    "Software engineer turning designs into functional, high-performing web applications — full-stack React interfaces, scalable Java backends, and cloud-native systems.",
 };
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${calistoga.variable} font-sans antialiased text-white seamless-bg-with-grain`}>
+      <body
+        className={twMerge(
+          serif.variable,
+          sans.variable,
+          mono.variable,
+          "antialiased"
+        )}
+      >
         {children}
       </body>
     </html>
