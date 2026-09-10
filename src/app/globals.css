@@ -222,26 +222,6 @@ img {
   writing-mode: vertical-rl;
   animation: coinBlink 1.1s steps(1) infinite;
 }
-/* Platform-adaptive content: pointer (mouse) devices see the joystick +
-   "INSERT COIN"; touch devices (phones/tablets) see a tap icon +
-   "TAP TO PLAY". Pure CSS via input-type media queries, so it works with
-   static export and never causes a hydration mismatch. */
-.arcade-tab .stick--touch,
-.arcade-tab .label--touch {
-  display: none;
-}
-@media (hover: none) and (pointer: coarse) {
-  .arcade-tab .stick--pointer,
-  .arcade-tab .label--pointer {
-    display: none;
-  }
-  .arcade-tab .stick--touch {
-    display: block;
-  }
-  .arcade-tab .label--touch {
-    display: block;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .arcade-tab .slot::after,
   .arcade-tab .coin-label { animation: none; }
