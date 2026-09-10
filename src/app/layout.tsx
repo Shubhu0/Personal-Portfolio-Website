@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
-import { Instrument_Serif, Schibsted_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Instrument_Serif, Schibsted_Grotesk, JetBrains_Mono, Press_Start_2P } from "next/font/google";
 import { twMerge } from "tailwind-merge";
 
+import { ArcadeTab } from "@/components/ArcadeTab";
 import "./globals.css";
 
 const serif = Instrument_Serif({
@@ -26,6 +27,13 @@ const mono = JetBrains_Mono({
   display: "swap",
 });
 
+const pixel = Press_Start_2P({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-pixel",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Shubhankar Mishra — Software Engineer",
   description:
@@ -44,10 +52,12 @@ export default function RootLayout({
           serif.variable,
           sans.variable,
           mono.variable,
+          pixel.variable,
           "antialiased"
         )}
       >
         {children}
+        <ArcadeTab />
       </body>
     </html>
   );
