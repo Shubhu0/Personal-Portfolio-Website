@@ -281,6 +281,12 @@ img {
 /* ===================================================================
    Responsive
    =================================================================== */
+/* Reserve a right-edge gutter so the fixed arcade tab never overlaps
+   content. Above ~1360px the centered 1320 max-width already leaves
+   enough margin, so this only kicks in on tablets and smaller. */
+@media (max-width: 1360px) {
+  .pad-x { padding-right: 68px !important; }
+}
 @media (max-width: 900px) {
   .hero-grid { grid-template-columns: 1fr !important; gap: 40px !important; }
   .proj-card-inner { grid-template-columns: 1fr !important; }
@@ -292,7 +298,8 @@ img {
 @media (max-width: 640px) {
   .nav-bar { padding: 14px 20px !important; }
   .nav-links { gap: 18px !important; }
-  .pad-x { padding-left: 20px !important; padding-right: 20px !important; }
+  /* right gutter kept wider than the ~42px mobile tab so text stays clear */
+  .pad-x { padding-left: 20px !important; padding-right: 54px !important; }
 }
 @media (max-width: 560px) {
   .nav-links a[data-navlink] { display: none; }
